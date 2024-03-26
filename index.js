@@ -11,11 +11,11 @@ async function authorization(taskName) {
   return token;
 }
 
-async function getTask(taskName, extraInfo) {
+async function getTask(taskName, options) {
   const token = await authorization(taskName);
-  const task = !extraInfo 
+  const task = !options 
     ? await fetch(`https://tasks.aidevs.pl/task/${token}`) 
-    : await fetch(`https://tasks.aidevs.pl/task/${token}`, extraInfo)
+    : await fetch(`https://tasks.aidevs.pl/task/${token}`, options)
   const result = await task.json();
   return { result, token }
 }
@@ -29,8 +29,8 @@ async function sendTask(token, body) {
  }
 
 
- async function doTask(taskName, resolve, extraInfo) {
-  const { result, token } = await getTask(taskName, extraInfo);
+ async function doTask(taskName, resolve, options) {
+  const { result, token } = await getTask(taskName, options);
   const body = await resolve(result);
 
   if (!body) {
